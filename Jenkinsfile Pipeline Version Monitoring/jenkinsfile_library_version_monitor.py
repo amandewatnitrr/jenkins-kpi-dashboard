@@ -11,15 +11,12 @@ PAT = "PRIVATE_ACCESS_TOKEN"
 GITLAB_SERVER = "GITLAB_SERVER"
 SEARCH_STRING = "@Library"
 
-# Configure logging
 logging.basicConfig(filename='jenkinsfile_fetch.log', level=logging.INFO)
 
-# Asynchronous function to fetch URL
 async def fetch_url(session, url):
     async with session.get(url) as response:
         return await response.text()
 
-# Asynchronous function to extract GitLab URLs from a config file
 async def extract_urls_from_config_file(config_file_path):
     urls = []
     tree = ET.parse(config_file_path)
@@ -29,7 +26,6 @@ async def extract_urls_from_config_file(config_file_path):
             urls.append(url.text)
     return urls
 
-# Asynchronous function to fetch the Jenkinsfile from a repository
 async def fetch_jenkinsfile_from_repository(session, url, library_counts, jenkinsfile_log):
     project_path = url.split(":")[1] if ":" in url else url.split("//")[1]
     project_path = project_path.strip('.git').strip('/')
