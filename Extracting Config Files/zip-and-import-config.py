@@ -14,7 +14,7 @@ def zip_and_move_jobs_folder(host, port, username, password, remote_path, tmp_pa
     stdout.channel.recv_exit_status()
 
     # Step 2: Move the ZIP file to /tmp on the VM
-    move_command = f"mv {zip_filepath} {tmp_path}"
+    move_command = f"mv {zip_filepath} {os.path.join(tmp_path, f'{zip_filename}.zip')}"
     stdin, stdout, stderr = sftp.exec_command(move_command)
     stdout.channel.recv_exit_status()
 
