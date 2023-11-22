@@ -2,47 +2,44 @@ import os
 import paramiko
 import shutil
 
-def download_and_zip_jobs_folder(host, port, username, password, remote_path, local_path, zip_filename):
+def zip_and_move_jobs_folder(host, port, username, password, remote_path, tmp_path, local_path, zip_filename):
     transport = paramiko.Transport((host, port))
     transport.connect(username=username, password=password)
     sftp = paramiko.SFTPClient.from_transport(transport)
 
-    local_temp_path = os.path.join(local_path, 'temp')
-    os.makedirs(local_temp_path, exist_ok=True)
+    # Step 1: Zip the "jobs" folder on the VM
+    zip_filepath = os.path.join(remote_path, f"{zip_filename}.zip")
+    zip_command = f"cd {remote_path} && zip -r {zip_filename}.zip jobs"
+    stdin, stdout, stderr = sftp.exec_command(zip_command)
+    stdout.channel.recv_exit_status()
 
-    # Download jobs folder recursively
-    download_recursive(sftp, remote_path, local_temp_path)
+    # Step 2: Move the ZIP file to /tmp on the VM
+    move_command = f"mv {zip_filepath} {tmp_path}"
+    stdin, stdout, stderr = sftp.exec_command(move_command)
+    stdout.channel.recv_exit_status()
 
-    # Zip the downloaded folder
-    shutil.make_archive(os.path.join(local_path, zip_filename), 'zip', local_temp_path)
+    # Step 3: Download the ZIP file to the local computer
+    local_zip_filepath = os.path.join(local_path, f"{zip_filename}.zip")
+    sftp.get(os.path.join(tmp_path, f"{zip_filename}.zip"), local_zip_filepath)
 
-    print(f"ZIP file '{zip_filename}.zip' created successfully.")
-
-    # Cleanup: Remove the temporary folder
-    shutil.rmtree(local_temp_path)
+    # Step 4: Cleanup: Remove the ZIP file from /tmp on the VM
+    remove_command = f"rm {os.path.join(tmp_path, f'{zip_filename}.zip')}"
+    stdin, stdout, stderr = sftp.exec_command(remove_command)
+    stdout.channel.recv_exit_status()
 
     sftp.close()
     transport.close()
 
-def download_recursive(sftp, remote_path, local_path):
-    for item in sftp.listdir_attr(remote_path):
-        remote_item_path = f"{remote_path}/{item.filename}"
-        local_item_path = os.path.join(local_path, item.filename)
-
-        if stat.S_ISDIR(item.st_mode):
-            os.makedirs(local_item_path, exist_ok=True)
-            download_recursive(sftp, remote_item_path, local_item_path)
-        else:
-            sftp.get(remote_item_path, local_item_path)
+    print(f"ZIP file '{local_zip_filepath}' created and downloaded successfully.")
 
 # Replace these values with your actual credentials and paths
-remote_ip = 'XX.XX.XX.XX'  # Replace with your VM's IP address
+remote_ip = 'XX.XX.XX.XX'
 remote_port = 22
+username = 'your_username'
+password = 'your_password'
 remote_path = "/home/jenkins/CORELOAD-INBLRJENKINS01/jenkins_home/"
-local_path = r"C:\Users\YourUsername\Documents"
-zip_filename = 'jenkins_home_archive'
+tmp_path = "/tmp"
+local_path = r"C:\Users\YourUsername\Downloads"
+zip_filename = 'jobs_archive'
 
-username = 'your_ssh_username'
-password = 'your_ssh_password'
-
-download_and_zip_jobs_folder(remote_ip, remote_port, username, password, remote_path, local_path, zip_filename)
+zip_and_move_jobs_folder(remote_ip, remote_port, username, password, remote_path, tmp_path, local_path, zip_filename)
