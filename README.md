@@ -255,6 +255,69 @@ Asynchronous operations enhance efficiency by allowing parallel execution.
 Documentation:
 The diagram serves as comprehensive documentation, aiding understanding and troubleshooting.
 
+## SSH and SCP the "config.xml" files from Jenkins Server VM
+
+### Problem Statement
+
+- Automate the process of fetching Jenkins configuration files ("config.xml") and Jenkinsfiles from the Jenkins server VM.
+- Aims to streamline and simplify the manual tasks involved in zipping and transferring these essential files, contributing to increased efficiency in managing Jenkins configurations.
+- Previously, the process of obtaining Jenkins configuration files involved manual steps, such as logging into the VM, zipping the required files, and then transferring them to the local system via SCP. This manual intervention has now been replaced with a more efficient and automated solution using shell scripting.
+- The automated process utilizes SSH and SCP commands within a shell script to connect to the Jenkins server VM, zip the "config.xml" files, and securely transfer the zip file to the local machine. This not only saves time but also ensures accuracy and consistency in the retrieval of these crucial files.
+
+### Code
+
+```shell
+#!/bin/bash
+
+# Connect to the remote server using SSH, disable strict host key checking, and set UserKnownHostsFile to /dev/null
+ssh $VM_USERNAME@$VM_IP -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "cd /var/jenkins_home/jobs/ && find . -name 'config.xml' -print0 | xargs -0 zip -0 -r /tmp/config_files.zip"
+
+# Copy the generated zip file from the remote server to the local machine using SCP
+scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $VM_USERNAME@$VM_IP:/tmp/config_files.zip config_files.zip && unzip -o config_files.zip -d config_files/
+```
+
+### Process Flow
+
+- SSH Connection:
+  - Establishes a secure SSH connection to the Jenkins server VM.
+- Zip Config Files:
+  - Utilizes the find command to locate all config.xml files.
+  - Zips the files into a single archive (config_files.zip).
+- SCP Transfer:
+  - Uses SCP to securely transfer the zip file to the local machine.
+- Unzip Locally:
+  - Unzips the transferred file locally into a designated directory (config_files/).
+
+
+```mermaid
+%%{
+  init: {
+    'theme': 'forest',
+    'themeVariables': {
+      'primaryTextColor': '#fff',
+      'lineColor': '#F8B229',
+      'secondaryColor': '#006100',
+      'tertiaryColor': '#fff'
+    }
+  }
+}%%
+graph TD
+  subgraph Remote_Server
+    A[Connect to Remote Server] -->|SSH| B[Change to Jenkins Jobs Directory]
+    B -->|Find and Zip| C[Zip 'config.xml' Files into '/tmp/config_files.zip']
+  end
+
+  subgraph Local_Machine
+    D[Copy 'config_files.zip' from Remote Server] -->|SCP| E[Download 'config_files.zip']
+    E -->|Unzip| F[Extract Contents into 'config_files' Directory]
+  end
+
+  A -->|SCP| D
+
+```
+
+### The New Approach
+
 ```mermaid
 %%{
   init: {
