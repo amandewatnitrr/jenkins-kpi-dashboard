@@ -249,7 +249,58 @@ Two CSV files are utilized to store valuable information: 'libraries_by_repo.csv
 Error logs are generated for cases where the Jenkinsfile is not found or no suitable branch is available. These logs aid in identifying and resolving issues during or after the process.
 Conclusion
 
-#### Efficiency:
+#### Efficiency
+
 Asynchronous operations enhance efficiency by allowing parallel execution.
 Documentation:
 The diagram serves as comprehensive documentation, aiding understanding and troubleshooting.
+
+```mermaid
+%%{
+  init: {
+    'theme': 'forest',
+    'themeVariables': {
+      'primaryTextColor': '#fff',
+      'lineColor': '#F8B229',
+      'secondaryColor': '#006100',
+      'tertiaryColor': '#fff'
+    }
+  }
+}%%
+
+graph TD;
+  A[Execute Shell Script] -->|SSH into VM| B{Zip Config Files};
+  B -->|SCP to Local| C(Unzip Config Files);
+  C --> D[Extract URLs from Config Files];
+  D --> E{Fetch Jenkinsfile};
+  E -->|Branch Available?| F;
+  F -->|Process Jenkinsfile| G{Jenkinsfile Found?};
+  G -->|Extract Libraries| H(Update Library Counts);
+  G -->|Log Missing Jenkinsfile| I(Log Missing Jenkinsfile);
+  F -->|Log No Branch Found| J(Log No Branch Found);
+  H -->|Log Library Usage| K(Update 'libraries_by_repo.csv);
+  D -->|Finish Processing Repositories| L(Finish);
+
+  subgraph Main Process
+    A --> B --> C --> D --> E;
+    H --> K;
+  end;
+
+  subgraph Asynchronous Operations
+    D -->|Async Fetch| E;
+    E -->|Async Fetch| F;
+    F -->|Async Fetch| G;
+    F -->|Async Log| I;
+    F -->|Async Log| J;
+    H -->|Async Log| K;
+  end;
+
+  subgraph CSV Files
+    K -->|Update| L;
+  end;
+
+  subgraph Logging
+    I -->|Log| L;
+    J -->|Log| L;
+  end;
+```
