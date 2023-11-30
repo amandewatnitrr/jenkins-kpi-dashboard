@@ -50,6 +50,17 @@ To address the challenge of monitoring KPIs for Jenkins build pipelines, we prop
 ## Asynchronous Jenkinsfile Fetching and Library Extraction Process
 
 ```mermaid
+%%{
+  init: {
+    'theme': 'forest',
+    'themeVariables': {
+      'primaryTextColor': '#fff',
+      'lineColor': '#F8B229',
+      'secondaryColor': '#006100',
+      'tertiaryColor': '#fff'
+    }
+  }
+}%%
 graph TD;
   A[Extract URLs from Config Files] -->|List of URLs| B(Process Each Repository);
   B -->|Fetch Jenkinsfile| C{Branch Available?};
