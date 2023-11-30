@@ -7,9 +7,9 @@ import aiohttp
 import re
 import subprocess
 
-USERNAME = "*********"
-PAT = "**********"
-GITLAB_SERVER = "gitlab-something.something.com"
+USERNAME = "USERNAME"
+PAT = "PRIVATE_ACCESS_TOKEN"
+GITLAB_SERVER = "GITLAB_SERVER"
 SEARCH_STRING = "@Library"
 
 # Configure logging
