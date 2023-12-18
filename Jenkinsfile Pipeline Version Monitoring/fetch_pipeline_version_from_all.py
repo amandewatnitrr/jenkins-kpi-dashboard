@@ -32,6 +32,25 @@ async def extract_urls_from_config_file(config_file_path):
             urls.append(url.text)
     return urls
 
+# Asynchronous function to check if the Jenkins pipeline is active
+async def is_pipeline_active(session, project_path, branch):
+    try:
+        job_name = f"{project_path.replace('/', '_')}_{branch}"
+        jenkins_url = "http://your_jenkins_server_url"  # Replace with your Jenkins server URL
+        build_url = f"{jenkins_url}/job/{job_name}/lastBuild/api/json"
+        
+        async with session.get(build_url) as build_response:
+            build_info = await build_response.json()
+
+            if build_response.status == 200 and build_info.get("result") is None:
+                return True  # Pipeline is active
+            else:
+                return False  # Pipeline is not active or build failed
+
+    except aiohttp.ClientError as e:
+        print(f"An error occurred while checking pipeline status for {project_path} (Branch: {branch}): {e}")
+        return False
+
 # Asynchronous function to fetch the Jenkinsfile from a repository
 async def fetch_jenkinsfile_from_repository(session, url, library_counts, jenkinsfile_log, total_pipelines, processed_repositories):
     match = re.search(r"(?<=gitlab-gxp.cloud.health.ge.com:)(.*?)(?=\.git|$)", url)
@@ -75,11 +94,15 @@ async def fetch_jenkinsfile_from_repository(session, url, library_counts, jenkin
                                         for lib in map(str.strip, library.split(',')):
                                             library_counts[lib] = library_counts.get(lib, 0) + 1
 
+                                            # Check if the pipeline is active
+                                            is_active_pipeline = await is_pipeline_active(session, project_path, branch)
+
                                             # Log library usage by repository
                                             with open('libraries_by_repo.csv', 'a', newline='') as csvfile:
                                                 csv_writer = csv.writer(csvfile)
-                                                csv_writer.writerow([project_path, branch, lib, dsl_name, enable_stages])
-                                            print(f"Repository: {project_path} (Branch: {branch}) -> {lib}, DSL Name: {dsl_name}, Enable Stages: {enable_stages}")
+                                                csv_writer.writerow([project_path, branch, lib, dsl_name, enable_stages, is_active_pipeline])
+                                            
+                                            print(f"Repository: {project_path} (Branch: {branch}) -> {lib}, DSL Name: {dsl_name}, Enable Stages: {enable_stages}, Active Pipeline: {is_active_pipeline}")
 
                                 total_pipelines.add((project_path, branch))
                             else:
@@ -117,7 +140,7 @@ async def main():
     # Initialize CSV files
     with open('libraries_by_repo.csv', 'w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
-        csv_writer.writerow(['Repository', 'Branch', 'Library', 'dsl_name', 'enable_stages'])
+        csv_writer.writerow(['Repository', 'Branch', 'Library', 'dsl_name', 'enable_stages', 'status'])
 
     with open('library_counts.csv', 'w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
@@ -168,29 +191,3 @@ async def main():
 
 if __name__ == '__main__':
     asyncio.run(main())
-
-    
-    '''
-    async def fetch_jenkinsfile_from_repository(session, url, library_counts, jenkinsfile_log, total_pipelines, processed_repositories, active_jenkinsfiles):
-    # ...
-
-    if lines:
-        for line in lines:
-            # ...
-
-            active_pipelines_url = f"https://{GITLAB_SERVER}/api/v4/projects/{project_path.replace('/', '%2F')}/pipelines?ref={branch}&status=running"
-            async with session.get(active_pipelines_url, headers={"PRIVATE-TOKEN": PAT}) as active_pipelines_response:
-                if active_pipelines_response.status == 200:
-                    active_pipelines = await active_pipelines_response.json()
-                    if active_pipelines:
-                        active_jenkinsfiles.add((project_path, branch))
-                        print(f"Active pipeline found for {project_path} (Branch: {branch})")
-                    else:
-                        print(f"No active pipeline found for {project_path} (Branch: {branch})")
-                else:
-                    print(f"Failed to retrieve active pipelines for {project_path} (Branch: {branch}). Status code: {active_pipelines_response.status}")
-
-                    jenkinsfile_log.error(f"Failed to retrieve active pipelines for {project_path} (Branch: {branch}). Status code: {active_pipelines_response.status}")
-
-            # ...
-    '''
