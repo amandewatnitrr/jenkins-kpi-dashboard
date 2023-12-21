@@ -1,0 +1,41 @@
+{% extends "main.html" %}
+{% load static %}
+{% block content %}
+
+<br>
+<div class="container">
+    <div class="card" style="width: 100%;">
+        <div class="card-header text-center">
+            <img src="{% static 'imgs/jfrog_artifactory.svg' %}">
+        </div>
+        <div class="card-body">
+            <table class="table table-striped text-center">
+
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Link</th>
+                    <th>Status</th>
+                </tr>
+                {% for artifactory in artifactories %}
+                <tr>
+                    <td>{{ artifactory.id }}</td>
+                    <td>{{ artifactory.name }}</td>
+                    <td><button type="button" class="btn btn-secondary">Artifactory Link</button></td>
+                    <td>
+                        {% if artifactory.status == 'Working' %}
+                            <button type="button" class="btn btn-success">{{artifactory.status}}</button>
+                        {% elif artifactory.status == 'Warning' %}
+                            <button type="button" class="btn btn-warning">{{artifactory.status}}</button>
+                        {% elif artifactory.status == 'Failure' %}
+                            <button type="button" class="btn btn-danger">{{artifactory.status}}</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

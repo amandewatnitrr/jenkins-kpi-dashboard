@@ -1,0 +1,52 @@
+{% extends "main.html" %}
+{% load static %}
+{% block content %}
+
+<br>
+<div class="container">
+    <div class="card" style="width: 100%;">
+        <div class="card-header text-center">
+            <img src="{% static 'imgs/gitlab.svg' %}">
+        </div>
+        <div class="card-body text-center">
+            <br>
+            <h1 class="gitlab_header">
+                Let's build from here
+            </h1>
+            <br>
+            <p class="f2-mktg color-fg-muted text-normal mb-4">
+                The complete developer platform to build, scale, and deliver secure software.
+            </p>
+
+            <br>
+            <div class="d-flex justify-content-center ">
+                <div class="col-6 col-sm-4 col-md-3">
+                    <h2 class="textcontent">{{Developers}}<span class="color-fg-muted">+</span></h2>
+                    <p class="textdesign">Developers</p>
+
+                </div>
+
+                <div class="col-6 col-sm-4 col-md-3">
+                    <h2 class="textcontent">{{Version}}<span class="color-fg-muted"></span></h2>
+                    <p class="textdesign">Version</p>
+                </div>
+
+                <div class="col-sm-4 col-md-3 d-none d-md-block">
+                    <h2 class="textcontent">{{Projects}}<span class="color-fg-muted">+</span></h2>
+                    <p class="textdesign">Projects</p>
+                </div>
+            </div>
+            <br>
+            <button type="button" class="{% if status == 'Working' %}btn btn-success{% else %}btn btn-danger{% endif %}">
+                {% if status == 'Working' %}Working...{% else %}Failure{% endif %}
+            </button>
+            <br><br>
+            <picture>
+              <source srcset="https://github.githubassets.com/assets/octocats-656a28e14a2f.webp" type="image/webp">
+              <img src="https://github.githubassets.com/assets/octocats-ca1ef4dbee6f.png" alt="An array of octocats working and enjoying life" class="mx-auto width-fit height-auto p-responsive mb-6" width="65%" height="65%">
+            </picture>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

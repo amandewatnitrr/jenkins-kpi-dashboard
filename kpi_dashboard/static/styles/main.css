@@ -1,0 +1,36 @@
+.logo-img {
+    margin-left: 10px;
+}
+
+.textdesign{
+    font-family: ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace !important;
+    font-weight: var(--base-text-weight-normal, 400);
+    font-size: 14px !important;
+    line-height: 20px !important;
+}
+
+.textcontent{
+    font-family: ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace !important;
+    font-weight: var(--base-text-weight-normal, 400);
+    font-size: 18px !important;
+    line-height: 24px !important;
+}
+
+
+.gitlab_header {
+    font-family: "Mona Sans", Arial, sans-serif !important;
+    font-weight: 900;
+}
+
+.f2-mktg{
+    font-size: 20px !important;
+    line-height: 28px !important;
+}
+
+.text-normal {
+font-weight: var(--base-text-weight-normal, 400) !important;
+}
+
+.color-fg-muted{
+    color: rgb(101,109,118) !important
+}
