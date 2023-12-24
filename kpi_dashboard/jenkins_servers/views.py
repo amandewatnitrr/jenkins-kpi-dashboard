@@ -3,15 +3,30 @@ from .models import jenkins_servers
 import jenkins
 import requests
 
+import requests
+import jenkins
+
 def get_jenkins_server_details(server_url, username, password):
     # Disable SSL certificate verification (not recommended for production)
     requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
     # Create a Jenkins server instance
-    server = jenkins.Jenkins(server_url, username=username, password=password)
+    server = jenkins.Jenkins(server_url, username=username, password=password, timeout=10)
 
-    # Get server details using the Jenkins API
-    server_info = server.get_info()
+    # Get server details using the Jenkins API with SSL verification disabled
+    try:
+        response = requests.get(
+            f"{server_url.rstrip('/')}/crumbIssuer/api/json",
+            auth=(username, password),
+            timeout=10,
+            verify=False  # Disable SSL verification
+        )
+        response.raise_for_status()
+        server_info = response.json()
+    except requests.RequestException as e:
+        # Handle the exception (e.g., log the error)
+        print(f"Error retrieving Jenkins server details: {e}")
+        return 'N/A', 'N/A', 'N/A', 'Not Working'
 
     # Extract relevant information
     server_up_time = server_info.get('mode', 'N/A')
