@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'artifactories.apps.ArtifactoriesConfig',
     'Gitlab.apps.GitlabConfig',
     'jenkins_servers.apps.JenkinsServersConfig',
-
+    'homepage.apps.HomepageConfig',
 ]
 
 MIDDLEWARE = [

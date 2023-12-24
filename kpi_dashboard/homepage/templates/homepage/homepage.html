@@ -1,0 +1,126 @@
+{% extends "main.html" %}
+{% load static %}
+{% block content %}
+
+<br>
+<div class="container">
+    <div class="card" style="width: 100%;">
+        <div class="card-header text-center">
+            <img src="{% static 'imgs/gitlab.svg' %}">
+        </div>
+        <div class="card-body text-center">
+            <br>
+            <h1 class="gitlab_header">
+                Let's build from here
+            </h1>
+            <br>
+            <p class="f2-mktg color-fg-muted text-normal mb-4">
+                The complete developer platform to build, scale, and deliver secure software.
+            </p>
+
+            <br>
+            <div class="d-flex justify-content-center ">
+                <div class="col-6 col-sm-4 col-md-3">
+                    <h2 class="textcontent">{{Developers}}<span class="color-fg-muted">+</span></h2>
+                    <p class="textdesign">Developers</p>
+
+                </div>
+
+                <div class="col-6 col-sm-4 col-md-3">
+                    <h2 class="textcontent">{{Version}}<span class="color-fg-muted"></span></h2>
+                    <p class="textdesign">Version</p>
+                </div>
+
+                <div class="col-sm-4 col-md-3 d-none d-md-block">
+                    <h2 class="textcontent">{{Projects}}<span class="color-fg-muted">+</span></h2>
+                    <p class="textdesign">Projects</p>
+                </div>
+            </div>
+            <br>
+            <button type="button" class="{% if status == 'Working' %}btn btn-success{% else %}btn btn-danger{% endif %}">
+                {% if status == 'Working' %}Working...{% else %}Failure{% endif %}
+            </button>
+            <br><br>
+            <picture>
+              <source srcset="https://github.githubassets.com/assets/octocats-656a28e14a2f.webp" type="image/webp">
+              <img src="https://github.githubassets.com/assets/octocats-ca1ef4dbee6f.png" alt="An array of octocats working and enjoying life" class="mx-auto width-fit height-auto p-responsive mb-6" width="65%" height="65%">
+            </picture>
+        </div>
+    </div>
+</div>
+
+<br>
+<div class="container">
+    <div class="card" style="width: 100%;">
+        <div class="card-header text-center">
+            <img src="{% static 'imgs/jfrog_artifactory.svg' %}">
+        </div>
+        <div class="card-body">
+            <table class="table table-striped text-center">
+
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Link</th>
+                    <th>Status</th>
+                </tr>
+                {% for artifactory in artifactories %}
+                <tr>
+                    <td>{{ artifactory.id }}</td>
+                    <td>{{ artifactory.name }}</td>
+                    <td><button type="button" class="btn btn-secondary">Artifactory Link</button></td>
+                    <td>
+                        {% if artifactory.status == 'Working' %}
+                            <button type="button" class="btn btn-success">{{artifactory.status}}</button>
+                        {% elif artifactory.status == 'Warning' %}
+                            <button type="button" class="btn btn-warning">{{artifactory.status}}</button>
+                        {% elif artifactory.status == 'Failure' %}
+                            <button type="button" class="btn btn-danger">{{artifactory.status}}</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+
+<br>
+<div class="container">
+    <div class="card" style="width: 100%;">
+        <div class="card-header text-center">
+            <img src="{% static 'imgs/jenkins.svg' %}">
+        </div>
+        <div class="card-body text-center">
+    <table class="table table-striped text-center">
+
+                <tr>
+                    <th>Jenkins Server</th>
+                    <th>Server Up Time</th>
+                    <th>Response Time</th>
+                    <th>Network Latency</th>
+                    <th>Status</th>
+                </tr>
+                {% for server in jenkins_server_details %}
+                <tr>
+                    <td>{{ server.jenkins_url }}</td>
+                    <td>{{ server.server_up_time }}</td>
+                    <td>{{ server.response_time }}</td>
+                    <td>{{ server.network_latency }}</td>
+                    <td>
+                        {% if server.status == 'Working' %}
+                            <button type="button" class="btn btn-success">{{server.status}}</button>
+                        {% elif server.status == 'Warning' %}
+                            <button type="button" class="btn btn-warning">{{server.status}}</button>
+                        {% elif server.status == 'Failure' %}
+                            <button type="button" class="btn btn-danger">{{server.status}}</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+    </div>
+</div>
+
+
+{% endblock content %}
