@@ -4,6 +4,9 @@ import jenkins
 import requests
 
 def get_jenkins_server_details(server_url, username, password):
+    # Disable SSL certificate verification (not recommended for production)
+    requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
+
     # Create a Jenkins server instance
     server = jenkins.Jenkins(server_url, username=username, password=password)
 
@@ -14,7 +17,7 @@ def get_jenkins_server_details(server_url, username, password):
     server_up_time = server_info.get('mode', 'N/A')
     response_time = server_info.get('quietingDown', 'N/A')
     network_latency = server_info.get('useSecurity', 'N/A')  # You may need to adjust this field
-    status = 'Working' if server_info.get('mode', 'NORMAL') == 'Working' else 'Failure'
+    status = 'Working' if server_info.get('mode', 'NORMAL') == 'NORMAL' else 'Not Working'
 
     return server_up_time, response_time, network_latency, status
 
