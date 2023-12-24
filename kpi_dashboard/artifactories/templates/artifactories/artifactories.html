@@ -10,18 +10,15 @@
         </div>
         <div class="card-body">
             <table class="table table-striped text-center">
-
                 <tr>
-                    <th>#</th>
                     <th>Name</th>
                     <th>Link</th>
                     <th>Status</th>
                 </tr>
                 {% for artifactory in artifactories %}
                 <tr>
-                    <td>{{ artifactory.id }}</td>
                     <td>{{ artifactory.name }}</td>
-                    <td><button type="button" class="btn btn-secondary">Artifactory Link</button></td>
+                    <td><a href="{{ artifactory.url }}" class="btn btn-secondary">Artifactory Link</a></td>
                     <td>
                         {% if artifactory.status == 'Working' %}
                             <button type="button" class="btn btn-success">{{artifactory.status}}</button>

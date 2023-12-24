@@ -1,30 +1,23 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from .models import Artifactories  # Import the model
 
-def artifactories(request):
-    artifactories = [
+def artifactories_view(request):
+    # Fetch data from the model
+    artifactories = Artifactories.objects.all()
+
+    # Prepare data for template
+    artifactories_data = [
         {
-            'id':1,
-            'name':'BLR',
-            'url':'http://localhost:8081/',
-            'status':'Working'
-        },
-        {
-            'id': 2,
-            'name': 'US',
-            'url': 'http://localhost:8082/',
-            'status': 'Warning'
-        },
-        {
-            'id': 3,
-            'name': 'EU',
-            'url': 'http://localhost:8083/',
-            'status':'Failure'
-        },
+            'id': art.id,
+            'name': art.name,
+            'url': art.url,
+            'status': art.status,
+        }
+        for art in artifactories
     ]
-    context = {
-        'artifactories':artifactories,
-    }
-    return render(request,"artifactories/artifactories.html",context)
 
-# Create your views here.
+    # Pass data to the template
+    context = {
+        'artifactories': artifactories_data,
+    }
+    return render(request, "artifactories/artifactories.html", context)

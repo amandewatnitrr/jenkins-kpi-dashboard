@@ -1,65 +1,24 @@
+# views.py in the homepage app
+
 from django.shortcuts import render
 from django.http import HttpResponse
 
-def homepage(request):
+from artifactories.models import Artifactories
+from Gitlab.models import Gitlab
+from jenkins_servers.models import jenkins_servers
 
-    gitlab_details = {
-        'gitlab_url':'https://gitlab-gxp.company.com',
-        'Developers':'1000',
-        'status':'Failure',
-        'Version':'14.10.5-ee',
-        'Projects':'600',
-    }
+def homepage_view(request):
+    # Fetch data from models
+    artifactories_data = Artifactories.objects.all()
+    gitlab_data = Gitlab.objects.all()
+    jenkins_servers_data = jenkins_servers.objects.all()
 
-    jenkins_server_details = [
-        {
-            'jenkins_url':'https://jenkins-gxp.company.com',
-            'server_up_time':'99.99%',
-            'response_time':'0.5s',
-            'network_latency':'0.5s',
-            'status':'Working'
-        },
-        {
-            'jenkins_url': 'https://jenkins-gxp.company.com',
-            'server_up_time': '99.99%',
-            'response_time': '0.5s',
-            'network_latency': '0.5s',
-            'status': 'Warning'
-        },
-        {
-            'jenkins_url': 'https://jenkins-gxp.company.com',
-            'server_up_time': '99.99%',
-            'response_time': '0.5s',
-            'network_latency': '0.5s',
-            'status': 'Failure'
-        }
-    ]
-    artifactories = [
-        {
-            'id': 1,
-            'name': 'BLR',
-            'url': 'http://localhost:8081/',
-            'status': 'Working'
-        },
-        {
-            'id': 2,
-            'name': 'US',
-            'url': 'http://localhost:8082/',
-            'status': 'Warning'
-        },
-        {
-            'id': 3,
-            'name': 'EU',
-            'url': 'http://localhost:8083/',
-            'status': 'Failure'
-        },
-    ]
-
+    # Prepare data for the template
     context = {
-        'gitlab_details':gitlab_details,
-        'jenkins_server_details':jenkins_server_details,
-        'artifactories':artifactories,
+        'artifactories_data': artifactories_data,
+        'gitlab_data': gitlab_data,
+        'jenkins_servers_data': jenkins_servers_data,
     }
-    return render(request,"homepage/homepage.html",context)
 
-# Create your views here.
+    # Pass data to the template
+    return render(request, "homepage/homepage.html", context)

@@ -1,31 +1,25 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from .models import jenkins_servers  # Import the model
 
-def jenkins_servers(request):
+def jenkins_servers_view(request):
+    # Fetch data from the model
+    queryset = jenkins_servers.objects.all()
 
+    # Prepare data for template
     jenkins_server_details = [
         {
-            'jenkins_url':'https://jenkins-gxp.company.com',
-            'server_up_time':'99.99%',
-            'response_time':'0.5s',
-            'network_latency':'0.5s',
-            'status':'Working'
-        },
-        {
-            'jenkins_url': 'https://jenkins-gxp.company.com',
-            'server_up_time': '99.99%',
-            'response_time': '0.5s',
-            'network_latency': '0.5s',
-            'status': 'Warning'
-        },
-        {
-            'jenkins_url': 'https://jenkins-gxp.company.com',
-            'server_up_time': '99.99%',
-            'response_time': '0.5s',
-            'network_latency': '0.5s',
-            'status': 'Failure'
+            'jenkins_url': server.server_url,
+            'server_up_time': server.server_up_time,
+            'response_time': server.response_time,
+            'network_latency': server.network_latency,
+            'status': server.status,
         }
+        for server in queryset
     ]
-    return render(request,"jenkins_servers/jenkins_servers.html",context={'jenkins_server_details':jenkins_server_details})
 
-# Create your views here.
+    # Pass data to the template
+    return render(
+        request,
+        "jenkins_servers/jenkins_servers.html",
+        context={'jenkins_server_details': jenkins_server_details}
+    )

@@ -3,5 +3,5 @@ from . import views
 
 urlpatterns = [
 
-    path('jenkins_serves/', views.jenkins_servers, name='jenkins_servers')
+    path('jenkins_serves/', views.jenkins_servers_view, name='jenkins_servers')
 ]

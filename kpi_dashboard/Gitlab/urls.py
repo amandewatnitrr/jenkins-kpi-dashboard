@@ -3,5 +3,5 @@ from . import views
 
 urlpatterns = [
 
-    path('Gitlab/', views.Gitlab, name='Gitlab')
+    path('Gitlab/', views.Gitlab_view, name='Gitlab')
 ]
