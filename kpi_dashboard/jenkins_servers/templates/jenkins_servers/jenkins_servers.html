@@ -1,0 +1,42 @@
+{% extends "main.html" %}
+{% load static %}
+{% block content %}
+
+<br>
+<div class="container">
+    <div class="card" style="width: 100%;">
+        <div class="card-header text-center">
+            <img src="{% static 'imgs/jenkins.svg' %}">
+        </div>
+        <div class="card-body text-center">
+    <table class="table table-striped text-center">
+
+                <tr>
+                    <th>Jenkins Server</th>
+                    <th>Server Up Time</th>
+                    <th>Response Time</th>
+                    <th>Network Latency</th>
+                    <th>Status</th>
+                </tr>
+                {% for server in jenkins_server_details %}
+                <tr>
+                    <td>{{ server.jenkins_url }}</td>
+                    <td>{{ server.server_up_time }}</td>
+                    <td>{{ server.response_time }}</td>
+                    <td>{{ server.network_latency }}</td>
+                    <td>
+                        {% if server.status == 'Working' %}
+                            <button type="button" class="btn btn-success">{{server.status}}</button>
+                        {% elif server.status == 'Warning' %}
+                            <button type="button" class="btn btn-warning">{{server.status}}</button>
+                        {% elif server.status == 'Failure' %}
+                            <button type="button" class="btn btn-danger">{{server.status}}</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+    </div>
+</div>
+
+{% endblock content %}

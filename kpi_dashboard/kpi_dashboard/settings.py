@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'artifactories.apps.ArtifactoriesConfig',
     'Gitlab.apps.GitlabConfig',
+    'jenkins_servers.apps.JenkinsServersConfig',
 
 ]
 

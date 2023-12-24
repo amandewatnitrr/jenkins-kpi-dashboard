@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("",include("artifactories.urls")),
     path("",include("Gitlab.urls")),
+    path("",include("jenkins_servers.urls")),
 ]
