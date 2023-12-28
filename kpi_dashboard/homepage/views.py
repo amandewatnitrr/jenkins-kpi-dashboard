@@ -15,9 +15,9 @@ def homepage_view(request):
 
     # Prepare data for the template
     context = {
-        'artifactories_data': artifactories_data,
+        'artifactories': artifactories_data,
         'gitlab_data': gitlab_data,
-        'jenkins_servers_data': jenkins_servers_data,
+        'jenkins_server_details': jenkins_servers_data,
     }
 
     # Pass data to the template

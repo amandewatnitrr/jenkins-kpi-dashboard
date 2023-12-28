@@ -22,7 +22,7 @@ def Gitlab_view(request):
     # Fetch data from the model
     gitlab_instance = Gitlab.objects.first()  # Assuming you want the first GitLab instance
 
-    # Replace these values with your GitLab server URL and Private Access Token
+    # Replace these values with your GitLab se  rver URL and Private Access Token
     gitlab_url = gitlab_instance.url
     private_token = 'your_private_access_token'
 
