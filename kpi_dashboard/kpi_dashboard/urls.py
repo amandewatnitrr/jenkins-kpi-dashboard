@@ -23,4 +23,5 @@ urlpatterns = [
     path("",include("Gitlab.urls")),
     path("",include("jenkins_servers.urls")),
     path("",include("homepage.urls")),
+    path("",include("sonar.urls")),
 ]

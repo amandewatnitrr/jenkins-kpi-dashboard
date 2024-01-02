@@ -1,0 +1,45 @@
+{% extends "main.html" %}
+{% load static %}
+{% block content %}
+
+<br>
+<div class="container">
+    <div class="card" style="width: 100%;">
+        <div class="card-header text-center">
+            <img src="{% static 'imgs/sonar.svg' %}">
+        </div>
+        <div class="card-body text-center">
+            <br>
+            <h1 class="gitlab_header">
+                Continuous Inspection Powered by SonarQube
+            </h1>
+            <br>
+            <p class="f2-mktg color-fg-muted text-normal mb-4">
+                Identify and fix code quality and security issues early in your development process.
+            </p>
+
+            <br>
+            <div class="d-flex justify-content-center ">
+                <div class="col-6 col-sm-4 col-md-3">
+                    <h2 class="textcontent">{{ sonar_instance.health }}<span class="color-fg-muted"></span></h2>
+                    <p class="textdesign">Health</p>
+                </div>
+
+                <div class="col-6 col-sm-4 col-md-3">
+                    <h2 class="textcontent">{{ sonar_instance.version }}<span class="color-fg-muted"></span></h2>
+                    <p class="textdesign">Version</p>
+                </div>
+            </div>
+            <br>
+            <button type="button" class="{% if sonar_instance.health == 'Good' %}btn btn-success{% else %}btn btn-danger{% endif %}">
+                {% if sonar_instance.health == 'Good' %}Good...{% else %}Bad{% endif %}
+            </button>
+            <br><br>
+            <picture>
+                <img src="{% static 'imgs/header_.svg' %}" alt="An array of octocats working and enjoying life" class="mx-auto width-fit height-auto p-responsive mb-6" width="65%" height="65%">
+            </picture>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

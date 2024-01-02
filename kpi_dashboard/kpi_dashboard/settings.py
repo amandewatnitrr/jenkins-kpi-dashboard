@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'Gitlab.apps.GitlabConfig',
     'jenkins_servers.apps.JenkinsServersConfig',
     'homepage.apps.HomepageConfig',
+    'sonar.apps.SonarConfig',
 ]
 
 MIDDLEWARE = [
