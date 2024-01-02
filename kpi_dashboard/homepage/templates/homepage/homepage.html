@@ -59,7 +59,6 @@
             <table class="table table-striped text-center">
 
                 <tr>
-                    <th>#</th>
                     <th>Name</th>
                     <th>Link</th>
                     <th>Status</th>
@@ -67,7 +66,7 @@
                 {% for artifactory in artifactories %}
                 <tr>
                     <td>{{ artifactory.name }}</td>
-                    <td><button type="button" class="btn btn-secondary">Artifactory Link</button></td>
+                    <td><a href="{{ artifactory.url }}" class="btn btn-secondary">Artifactory Link</a></td>
                     <td>
                         {% if artifactory.status == 'Working' %}
                             <button type="button" class="btn btn-success">{{artifactory.status}}</button>
@@ -102,7 +101,7 @@
                 </tr>
                 {% for server in jenkins_server_details %}
                 <tr>
-                    <td>{{ server.jenkins_url }}</td>
+                    <td>{{ server.server_url }}</td>
                     <td>{{ server.server_up_time }}</td>
                     <td>{{ server.response_time }}</td>
                     <td>{{ server.network_latency }}</td>

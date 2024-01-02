@@ -26,13 +26,13 @@ def get_jenkins_server_details(server_url, username, password):
     except requests.RequestException as e:
         # Handle the exception (e.g., log the error)
         print(f"Error retrieving Jenkins server details: {e}")
-        return 'N/A', 'N/A', 'N/A', 'Not Working'
+        return 'N/A', 'N/A', 'N/A', 'Failure'
 
     # Extract relevant information
     server_up_time = server_info.get('mode', 'N/A')
     response_time = server_info.get('quietingDown', 'N/A')
     network_latency = server_info.get('useSecurity', 'N/A')  # You may need to adjust this field
-    status = 'Working' if server_info.get('mode', 'NORMAL') == 'NORMAL' else 'Not Working'
+    status = 'Working' if server_info.get('mode', 'Working') == 'Working' else 'Failure'
 
     return server_up_time, response_time, network_latency, status
 
