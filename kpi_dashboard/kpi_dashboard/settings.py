@@ -29,6 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+CELERY_BROKER_URL = 'django://'
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'Gitlab.apps.GitlabConfig',
     'jenkins_servers.apps.JenkinsServersConfig',
     'homepage.apps.HomepageConfig',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [

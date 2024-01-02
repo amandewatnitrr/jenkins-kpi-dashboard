@@ -1,7 +1,20 @@
+# views.py
 from django.shortcuts import render
 from .models import Gitlab
+from celery import shared_task
 import requests
 
+@shared_task
+def update_gitlab_data():
+    gitlab_instance = Gitlab.objects.first()
+    gitlab_url = gitlab_instance.url
+    private_token = 'your_private_access_token'
+    version, status = get_gitlab_version(gitlab_url, private_token)
+    gitlab_instance.version = version
+    gitlab_instance.status = status
+    gitlab_instance.save()
+
+@shared_task
 def get_gitlab_version(url, private_token):
     try:
         response = requests.get(
@@ -19,29 +32,21 @@ def get_gitlab_version(url, private_token):
     return version, 'Working'
 
 def Gitlab_view(request):
-    # Fetch data from the model
-    gitlab_instance = Gitlab.objects.first()  # Assuming you want the first GitLab instance
+    # Call the Celery task to update GitLab data asynchronously
+    update_gitlab_data.delay()
 
-    # Replace these values with your GitLab se  rver URL and Private Access Token
+    # Fetch data from the model for displaying in the template
+    gitlab_instance = Gitlab.objects.first()
     gitlab_url = gitlab_instance.url
-    private_token = 'your_private_access_token'
+    version = gitlab_instance.version
+    status = gitlab_instance.status
 
-    # Get GitLab version and status
-    version, status = get_gitlab_version(gitlab_url, private_token)
-
-    # Update GitLab model in the database
-    gitlab_instance.version = version
-    gitlab_instance.status = status
-    gitlab_instance.save()
-
-    # Prepare data for template
     context = {
         'gitlab_url': gitlab_url,
-        'Developers': '1000',  # You can update this based on your actual data
+        'Developers': '1000',
         'status': status,
         'Version': version,
-        'Projects': '600',  # You can update this based on your actual data
+        'Projects': '600',
     }
 
-    # Pass data to the template
     return render(request, "Gitlab/Gitlab.html", context)
