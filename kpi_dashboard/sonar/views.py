@@ -20,7 +20,7 @@ def sonar_view(request):
             response.raise_for_status()  # Raise an exception for 4xx and 5xx status codes
             data = response.json()
 
-            sonar_instance.health = data.get('status', 'Good')
+            sonar_instance.health = data.get('status', 'Bad')
             sonar_instance.version = data.get('version', 'Unknown')  # Add version field to SonarQube model
             # You can fetch and save other details like edition, etc. here
 

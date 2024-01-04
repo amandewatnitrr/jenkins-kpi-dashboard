@@ -19,6 +19,7 @@
             </p>
 
             <br>
+            {% for git in gitlab_data %}
             <div class="d-flex justify-content-center ">
                 <div class="col-6 col-sm-4 col-md-3">
                     <h2 class="textcontent">1000<span class="color-fg-muted">+</span></h2>
@@ -26,8 +27,9 @@
 
                 </div>
 
+
                 <div class="col-6 col-sm-4 col-md-3">
-                    <h2 class="textcontent">{{Version}}<span class="color-fg-muted"></span></h2>
+                    <h2 class="textcontent">{{git.version}}<span class="color-fg-muted"></span></h2>
                     <p class="textdesign">Version</p>
                 </div>
 
@@ -37,9 +39,10 @@
                 </div>
             </div>
             <br>
-            <button type="button" class="{% if status == 'Working' %}btn btn-success{% else %}btn btn-danger{% endif %}">
-                {% if status == 'Working' %}Working...{% else %}Failure{% endif %}
+            <button type="button" class="{% if git.status == 'Working' %}btn btn-success{% else %}btn btn-danger{% endif %}">
+                {% if git.status == 'Working' %}Working...{% else %}Failure{% endif %}
             </button>
+            {% endfor %}
             <br><br>
             <picture>
               <source srcset="https://github.githubassets.com/assets/octocats-656a28e14a2f.webp" type="image/webp">
@@ -65,8 +68,8 @@
                 </tr>
                 {% for artifactory in artifactories %}
                 <tr>
-                    <td>{{ artifactory.name }}</td>
-                    <td><a href="{{ artifactory.url }}" class="btn btn-secondary">Artifactory Link</a></td>
+                    <td>{{artifactory.name}}</td>
+                    <td><a href={{artifactory.url}} type="button" class="btn btn-secondary">Artifactory Link</a></td>
                     <td>
                         {% if artifactory.status == 'Working' %}
                             <button type="button" class="btn btn-success">{{artifactory.status}}</button>
@@ -90,33 +93,116 @@
             <img src="{% static 'imgs/jenkins.svg' %}">
         </div>
         <div class="card-body text-center">
-    <table class="table table-striped text-center">
-
-                <tr>
-                    <th>Jenkins Server</th>
-                    <th>Server Up Time</th>
-                    <th>Response Time</th>
-                    <th>Network Latency</th>
-                    <th>Status</th>
-                </tr>
+            <table class="table table-striped text-center">
                 {% for server in jenkins_server_details %}
-                <tr>
-                    <td>{{ server.server_url }}</td>
-                    <td>{{ server.server_up_time }}</td>
-                    <td>{{ server.response_time }}</td>
-                    <td>{{ server.network_latency }}</td>
+                    {% if forloop.counter0|divisibleby:4 %}
+                        </tr>
+                    {% endif %}
+                    {% if forloop.first or forloop.counter0|divisibleby:4 %}
+                        <tr>
+                    {% endif %}
                     <td>
-                        {% if server.status == 'Working' %}
-                            <button type="button" class="btn btn-success">{{server.status}}</button>
-                        {% elif server.status == 'Warning' %}
-                            <button type="button" class="btn btn-warning">{{server.status}}</button>
-                        {% elif server.status == 'Failure' %}
-                            <button type="button" class="btn btn-danger">{{server.status}}</button>
+                        {% if server %}
+                            {% if server.status == 'Working' %}
+                                <button type="button" class="btn btn-success">{{ server.server_url }}</button>
+                            {% elif server.status == 'Warning' %}
+                                <button type="button" class="btn btn-warning">{{ server.server_url }}</button>
+                            {% elif server.status == 'Failure' %}
+                                <button type="button" class="btn btn-danger">{{ server.server_url }}</button>
+                            {% endif %}
+                        {% else %}
+                            {# Empty cell if there is no server for this position in the row #}
                         {% endif %}
                     </td>
-                </tr>
                 {% endfor %}
+
             </table>
+        </div>
+    </div>
+</div>
+
+<br>
+<div class="container">
+    <div class="card" style="width: 100%;">
+        <div class="card-header text-center">
+            <img src="{% static 'imgs/sonar.svg' %}">
+        </div>
+        <div class="card-body text-center">
+            <br>
+            <h1 class="gitlab_header">
+                Continuous Inspection Powered by SonarQube
+            </h1>
+            <br>
+            <p class="f2-mktg color-fg-muted text-normal mb-4">
+                Identify and fix code quality and security issues early in your development process.
+            </p>
+
+            <br>
+            {% for sonar in sonar_instance %}
+            <div class="d-flex justify-content-center ">
+                <div class="col-6 col-sm-4 col-md-3">
+                    <h2 class="textcontent">{{ sonar.health }}<span class="color-fg-muted"></span></h2>
+                    <p class="textdesign">Status</p>
+                </div>
+
+                <div class="col-6 col-sm-4 col-md-3">
+                    <h2 class="textcontent">{{ sonar.version }}<span class="color-fg-muted"></span></h2>
+                    <p class="textdesign">Version</p>
+                </div>
+            </div>
+            <br>
+            <a href={{sonar.url}} type="button" class="{% if sonar.health == 'UP' %}btn btn-success{% else %}btn btn-danger{% endif %}">
+                {% if sonar.health == 'UP' %}Working...{% else %}Failure{% endif %}
+            </a>
+            {% endfor %}
+            <br><br>
+            <picture>
+                <img src="{% static 'imgs/header_.svg' %}" alt="An array of octocats working and enjoying life" class="mx-auto width-fit height-auto p-responsive mb-6" width="65%" height="65%">
+            </picture>
+        </div>
+    </div>
+</div>
+
+<br>
+<div class="container">
+    <div class="card" style="width: 100%;">
+        <div class="card-header text-center">
+            <img src="{% static 'imgs/g8.svg' %}" alt="Twistlock Logo">
+        </div>
+        <div class="card-body text-center">
+            <br>
+            <h1 class="twistlock_header">
+                Empowering Security with Twistlock
+            </h1>
+            <br>
+            <p class="f2-mktg color-fg-muted text-normal mb-4">
+                Twistlock - Your security solution for cloud-native applications.
+            </p>
+
+            <br>
+            <div class="d-flex justify-content-center">
+                {% for twistlock_instance in twistlock_data %}
+                    <div class="col-6 col-sm-4 col-md-3">
+                        <h2 class="textcontent">{{ twistlock_instance.version }}<span class="color-fg-muted"></span></h2>
+                        <p class="textdesign">Version</p>
+                    </div>
+
+                    <div class="col-6 col-sm-4 col-md-3">
+                        <h2 class="textcontent">{{ twistlock_instance.status }}<span class="color-fg-muted"></span></h2>
+                        <p class="textdesign">Status</p>
+                    </div>
+                {% endfor %}
+            </div>
+            <br>
+            <button type="button" class="{% if twistlock_data.0.status == 'Active' %}btn btn-success{% else %}btn btn-danger{% endif %}">
+                {% if twistlock_data.0.status == 'Active' %}Active{% else %}Inactive{% endif %}
+            </button>
+            <br><br>
+            <picture>
+                <source srcset="{% static 'imgs/terminal.gif' %}" type="image/webp">
+                <img src="{% static 'imgs/terminal.gif' %}" alt="Twistlock Image" class="mx-auto width-fit height-auto p-responsive mb-6" width="20%" height="20%">
+            </picture>
+        </div>
     </div>
 </div>
 

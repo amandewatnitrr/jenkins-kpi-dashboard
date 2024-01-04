@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'jenkins_servers.apps.JenkinsServersConfig',
     'homepage.apps.HomepageConfig',
     'sonar.apps.SonarConfig',
+    'twistlock.apps.TwistlockConfig',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,48 @@
+{% extends "main.html" %}
+{% load static %}
+{% block content %}
+
+<br>
+<div class="container">
+    <div class="card" style="width: 100%;">
+        <div class="card-header text-center">
+            <img src="{% static 'imgs/g8.svg' %}" alt="Twistlock Logo">
+        </div>
+        <div class="card-body text-center">
+            <br>
+            <h1 class="twistlock_header">
+                Empowering Security with Twistlock
+            </h1>
+            <br>
+            <p class="f2-mktg color-fg-muted text-normal mb-4">
+                Twistlock - Your security solution for cloud-native applications.
+            </p>
+
+            <br>
+            <div class="d-flex justify-content-center">
+                {% for twistlock_instance in twistlock_data %}
+                    <div class="col-6 col-sm-4 col-md-3">
+                        <h2 class="textcontent">{{ twistlock_instance.version }}<span class="color-fg-muted">+</span></h2>
+                        <p class="textdesign">Version</p>
+                    </div>
+
+                    <div class="col-6 col-sm-4 col-md-3">
+                        <h2 class="textcontent">{{ twistlock_instance.status }}<span class="color-fg-muted"></span></h2>
+                        <p class="textdesign">Status</p>
+                    </div>
+                {% endfor %}
+            </div>
+            <br>
+            <button type="button" class="{% if twistlock_data.0.status == 'Active' %}btn btn-success{% else %}btn btn-danger{% endif %}">
+                {% if twistlock_data.0.status == 'Active' %}Active{% else %}Inactive{% endif %}
+            </button>
+            <br><br>
+            <picture>
+                <source srcset="{% static 'imgs/terminal.gif' %}" type="image/webp">
+                <img src="{% static 'imgs/terminal.gif' %}" alt="Twistlock Image" class="mx-auto width-fit height-auto p-responsive mb-6" width="20%" height="20%">
+            </picture>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

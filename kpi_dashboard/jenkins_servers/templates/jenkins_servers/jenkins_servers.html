@@ -10,29 +10,26 @@
         </div>
         <div class="card-body text-center">
             <table class="table table-striped text-center">
-                <tr>
-                    <th>Jenkins Server</th>
-                    <th>Server Up Time</th>
-                    <th>Response Time</th>
-                    <th>Network Latency</th>
-                    <th>Status</th>
-                </tr>
                 {% for server in jenkins_server_details %}
-                <tr>
-                    <td>{{ server.jenkins_url }}</td>
-                    <td>{{ server.server_up_time }}</td>
-                    <td>{{ server.response_time }}</td>
-                    <td>{{ server.network_latency }}</td>
+                    {% if forloop.counter0|divisibleby:4 %}
+                        </tr>
+                    {% endif %}
+                    {% if forloop.first or forloop.counter0|divisibleby:4 %}
+                        <tr>
+                    {% endif %}
                     <td>
-                        {% if server.status == 'Working' %}
-                            <button type="button" class="btn btn-success">{{server.status}}</button>
-                        {% elif server.status == 'Warning' %}
-                            <button type="button" class="btn btn-warning">{{server.status}}</button>
-                        {% elif server.status == 'Failure' %}
-                            <button type="button" class="btn btn-danger">{{server.status}}</button>
+                        {% if server %}
+                            {% if server.status == 'Working' %}
+                                <button type="button" class="btn btn-success">{{ server.jenkins_url }}</button>
+                            {% elif server.status == 'Warning' %}
+                                <button type="button" class="btn btn-warning">{{ server.jenkins_url }}</button>
+                            {% elif server.status == 'Failure' %}
+                                <button type="button" class="btn btn-danger">{{ server.jenkins_url }}</button>
+                            {% endif %}
+                        {% else %}
+                            {# Empty cell if there is no server for this position in the row #}
                         {% endif %}
                     </td>
-                </tr>
                 {% endfor %}
             </table>
         </div>
